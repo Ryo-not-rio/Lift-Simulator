@@ -54,12 +54,14 @@ public class Building{
     public void tick() {
         this.testAdded = false;
         for(int i = 0; i < floorsNum; i++) {
-            floorsArray.get(i).tick();
+            floorsArray.get(i).tick(test);
         }
         for(int i = 0; i < liftsArray.size(); i++) {
             liftsArray.get(i).tick();
         }
-        if ((getWaitingPeople().size() == 0) && getBoardedPeople().size() == 0) test.finish(true);
+        if ((getWaitingPeople().size() == 0) && 
+                getBoardedPeople().size() == 0 &&
+                !test.needMorePeople()) test.finish(true);
     }
     
     public ArrayList<Floor> getFloors(){

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * The Floor class provides a single floor within the building.
@@ -24,6 +25,7 @@ public class Floor extends Object{
     @SuppressWarnings("unused")
     private int x, y;
     private Building building;
+    private Random r = new Random();
     
     public Floor(int floorNumber, int x, int y, Building building) {
         super(x, y);
@@ -60,6 +62,18 @@ public class Floor extends Object{
     }
     
     public void tick() {
+        
+    }
+    
+    public void tick(Test test) {
+        if(test.getPeopleCount() < test.getPeopleNum()) {
+            int chance = r.nextInt(100);
+            if(chance < 2 || building.getWaitingPeople().size() == 0) {
+                addPerson(new Person(floorNum, building));
+                test.addPeopleCount();
+            }
+        }    
+            
         for(int i = 0; i < people.size(); i++) {
             people.get(i).tick();
         }

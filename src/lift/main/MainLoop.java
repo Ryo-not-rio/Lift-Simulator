@@ -70,7 +70,7 @@ public class MainLoop extends Canvas implements Runnable{
         
         this.building = this.test.getBuilding();
         
-        if(testing) delaySeconds = 0f;
+        if(testing) delaySeconds = 0.2f;
         else delaySeconds = 0.5f;
         this.ns = 1000000000 * delaySeconds;
         
@@ -143,7 +143,7 @@ public class MainLoop extends Canvas implements Runnable{
      * building object.
      */
     public void render() {
-        if(!this.testing) {
+        if(!this.testing || this.testing) {
             BufferStrategy bs = this.getBufferStrategy();
             if (bs == null) {
                 this.createBufferStrategy(2);

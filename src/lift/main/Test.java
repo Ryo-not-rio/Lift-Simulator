@@ -12,6 +12,7 @@ public class Test {
     private int liftNum;
     private int maxLiftNum;
     private int testNum;
+    private int peopleCount;
     
     private Building building;
     private LiftBrain liftBrain;    
@@ -33,9 +34,8 @@ public class Test {
         if(mainLoop.testing) {
             this.floorsNum = maxFloors > 0 ? r.nextInt(maxFloors / 2) * 2 + 5 : floorsNum;
             this.peopleNum = maxPeople > 0 ? r.nextInt((maxPeople / 5) - 5) * 5 + 5 : peopleNum;
-            this.liftNum = maxLiftNum != 0 ? r.nextInt(maxLiftNum - 1) + 1 : liftBrain.getLiftNum(floorsNum);
+            this.liftNum = maxLiftNum > 0 ? r.nextInt(maxLiftNum - 1) + 1 : liftNum;
             this.testNum = (int) (Math.max(maxFloors, floorsNum)/2 * Math.max(maxPeople, peopleNum)/5);
-            System.out.println(testNum);
         } else {
             this.testNum = 1;
         }
@@ -43,17 +43,13 @@ public class Test {
         this.building = new Building(this.floorsNum, this);
         
         this.steps = 0;
+        this.peopleCount = 0;
         this.building = new Building(floorsNum, this);
         
         for(int i = 0; i < this.liftNum; i++) {
             building.addLift(new Lift(Building.liftX + (i * Lift.width), 0, building.floorsNum, liftBrain, building, this));
         }
             
-        for(int i = 0; i < peopleNum; i++) {
-            int floor = r.nextInt(building.floorsNum);
-            building.addPerson(floor, new Person(floor, building));
-        }
-        
         this.maxPeopleOnFloor = getMaxPeople();
     }
     
@@ -103,6 +99,18 @@ public class Test {
                 mainLoop.setBuilding(building);
             }
         }
+    }
+    
+    public int getPeopleCount() {
+        return peopleCount;
+    }
+    
+    public boolean needMorePeople() {
+        return peopleCount < peopleNum;
+    }
+    
+    public void addPeopleCount() {
+        peopleCount++;
     }
     
     public LiftBrain getBrain() {
@@ -160,5 +168,6 @@ public class Test {
     
     public void setMaxLiftNum(int number) {
         this.maxLiftNum = number;
+        initialise();
     }
 }
