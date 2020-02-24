@@ -19,7 +19,7 @@ public class TestMenu extends MouseAdapter{
     public TestMenu(MainLoop mainLoop) {
         this.sliders.add(new Slider("Floors", MainLoop.WIDTH/2 - 350, 200, 600, 80, 5, 165));
         this.rangeTicks.add(new TickButton(MainLoop.WIDTH/2 + 400, 200, 100, 80));
-        this.sliders.add(new Slider("People", MainLoop.WIDTH/2 - 350, 350, 600, 80, 5, 1320));
+        this.sliders.add(new Slider("Rate", MainLoop.WIDTH/2 - 350, 350, 600, 80, 1, 100));
         this.rangeTicks.add(new TickButton(MainLoop.WIDTH/2 + 400, 350, 100, 80));
         this.sliders.add(new Slider("Lifts", MainLoop.WIDTH/2 - 350, 500, 600, 80, 1, 15));
         this.rangeTicks.add(new TickButton(MainLoop.WIDTH/2 + 400, 500, 100, 80));
@@ -48,8 +48,8 @@ public class TestMenu extends MouseAdapter{
         
         if(rangeTicks.get(0).getTicked()) test.setMaxFloorNum(sliders.get(0).getValue());
         else test.setFloorNum(sliders.get(0).getValue());
-        if(rangeTicks.get(1).getTicked()) test.setMaxPeopleNum(sliders.get(1).getValue());
-        else test.setPeopleNum(sliders.get(1).getValue());
+        if(rangeTicks.get(1).getTicked()) test.setMaxRateNum(sliders.get(1).getValue());
+        else test.setRateNum(sliders.get(1).getValue());
         if(rangeTicks.get(2).getTicked()) test.setMaxLiftNum(sliders.get(2).getValue());
         else test.setLiftNum(sliders.get(2).getValue());
         mainLoop.startRun(test, true);

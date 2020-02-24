@@ -16,7 +16,7 @@ public class Menu extends MouseAdapter{
     
     public Menu(MainLoop mainLoop) {
         this.sliders.add(new Slider("Floors", MainLoop.WIDTH/2 - 300, 200, 600, 80, 5, 165));
-        this.sliders.add(new Slider("People", MainLoop.WIDTH/2 - 300, 350, 600, 80, 5, 1320));
+        this.sliders.add(new Slider("Rate", MainLoop.WIDTH/2 - 300, 350, 600, 80, 10, 100));
         this.sliders.add(new Slider("Lifts", MainLoop.WIDTH/2 - 300, 500, 600, 80, 1, 15));
         this.startButton = new Button("Start", MainLoop.WIDTH/2 + 300, 620, 200, 80);
         this.testButton = new Button("Test", MainLoop.WIDTH/2 - 500, 620, 200, 80);
@@ -46,7 +46,7 @@ public class Menu extends MouseAdapter{
                 mainLoop.setTesting(false);
                 Test test = new Test(mainLoop);
                 test.setFloorNum(sliders.get(0).getValue());
-                test.setPeopleNum(sliders.get(1).getValue());
+                test.setRateNum(sliders.get(1).getValue());
                 test.setLiftNum(sliders.get(2).getValue());
                 mainLoop.startRun(test, false);
             }

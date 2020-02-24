@@ -31,4 +31,16 @@ public class Methods {
         else if(d > max) return max;
         return (int) d;
     }
+    
+    public final static int getMaxIndex(int[] array) {
+        int max = 0;
+        int index = 0;
+        for(int i=0; i<array.length; i++) {
+            if(array[i] > max) {
+                max = array[i];
+                index = i;
+            }
+        }
+        return index;
+    }
 }

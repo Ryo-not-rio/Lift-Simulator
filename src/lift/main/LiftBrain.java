@@ -33,30 +33,29 @@ public class LiftBrain {
     public Lift.STATE getNextMove(Lift lift, Building building) {
         int targetFloor = lift.getTargetFloor();
         int currentFloor = lift.getCurrentFloor();
-        STATE previousState = lift.getPreviousState();
+        STATE state = lift.getState();
         
         /*
          * If the program has just started, find the next floor the lift needs
          * to go to.
          */
         if(targetFloor <= -1) {
-            targetFloor = getNextFloor(lift, previousState, building);
+            targetFloor = getNextFloor(lift, state, building);
         }
         
-        if(targetFloor == lift.getCurrentFloor()) {
-            if(lift.getState() != Lift.STATE.Stop)  return Lift.STATE.Stop;
+        if(targetFloor == currentFloor) {
+            if(lift.getState() != Lift.STATE.Stop && 
+                    (needToStop(building.getFloors().get(currentFloor), lift.getState(), building) || needToGetOff(lift.getPeople(), currentFloor)))  return Lift.STATE.Stop;
         }
-        
-        if(previousState == Lift.STATE.Up) {
+        if(state == Lift.STATE.Stop) state = lift.getPreviousState();
+        if(state == Lift.STATE.Up) {
             if(currentFloor >= building.floorsNum -1) { // Reached the top
-                lift.setPreviousState(Lift.STATE.Down);
                 return Lift.STATE.Down;
             }
             return Lift.STATE.Up;
         }
             
         if(currentFloor <= 0) {
-            lift.setPreviousState(Lift.STATE.Up); // Reached the bottom
             return Lift.STATE.Up;
         }
         return Lift.STATE.Down;
@@ -153,5 +152,22 @@ public class LiftBrain {
             }
         }
         return -1;
+    }
+    
+    protected boolean needToStop(Floor floor, Lift.STATE state, Building building) {
+        if((floor.upIsPressed() && state == Lift.STATE.Up) ||
+                (floor.downIsPressed() && state == Lift.STATE.Down) ||
+                (floor.floorNum == building.floorsNum-1) ||
+                (floor.floorNum == 0)) {
+            return true;
+        }
+        return false;
+    }
+    
+    protected boolean needToGetOff(ArrayList<Person> people, int floor) {
+        for(Person person: people) {
+            if(person.getTargetFloor() == floor) return true;
+        }
+        return false;
     }
 }

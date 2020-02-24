@@ -22,8 +22,9 @@ public class Floor extends Object{
      */
     private ArrayList<Person> people = new ArrayList<Person>();
     public final int floorNum;
-    @SuppressWarnings("unused")
-    private int x, y;
+    private int lastVisited;
+    private int up = 0;
+    private int down = 0;
     private Building building;
     private Random r = new Random();
     
@@ -66,10 +67,14 @@ public class Floor extends Object{
     }
     
     public void tick(Test test) {
+        if(people.size() > 0) this.lastVisited++;
         if(test.getPeopleCount() < test.getPeopleNum()) {
-            int chance = r.nextInt(100);
-            if(chance < 2 || building.getWaitingPeople().size() == 0) {
-                addPerson(new Person(floorNum, building));
+            int chance = r.nextInt(1000);
+            if(chance < test.getPeopleRate()) {
+                Person person = new Person(floorNum, building);
+                addPerson(person);
+                if(person.getTargetFloor() > floorNum) this.up++;
+                else this.down++;
                 test.addPeopleCount();
             }
         }    
@@ -88,6 +93,24 @@ public class Floor extends Object{
     }
 
     public void removePerson(Person person) {
+        if(person.getTargetFloor() > floorNum) this.up--;
+        else this.down--;
         people.remove(person);
+    }
+    
+    public int getLastVisited() {
+        return lastVisited;
+    }
+    
+    public void visit() {
+        this.lastVisited = 0;
+    }
+    
+    public boolean upIsPressed() {
+        return up > 0;
+    }
+    
+    public boolean downIsPressed() {
+        return down > 0;
     }
 }

@@ -10,6 +10,7 @@ public class ImprovedBrain2 extends LiftBrain{
     public Lift.STATE getNextMove(Lift lift, Building building) {
         int targetFloor = lift.getTargetFloor();
         int currentFloor = lift.getCurrentFloor();
+        STATE state = lift.getState();
         STATE previousState = lift.getPreviousState();
         
         /*
@@ -17,28 +18,29 @@ public class ImprovedBrain2 extends LiftBrain{
          * to go to.
          */
         if(targetFloor <= -1) {
-            targetFloor = getNextFloor(lift, previousState, building);
+            targetFloor = getNextFloor(lift, state, building);
         }
         
         if(targetFloor == currentFloor) {
-            if(lift.getState() != Lift.STATE.Stop)  return Lift.STATE.Stop;
+            if(lift.getState() != Lift.STATE.Stop && 
+                    (needToStop(building.getFloors().get(currentFloor), lift.getState(), building) || needToGetOff(lift.getPeople(), currentFloor))) {
+                return Lift.STATE.Stop;
+            }
             else {
-                targetFloor = getNextFloor(lift, previousState, building);
+                targetFloor = getNextFloor(lift, state, building);
             }
         }
 
         if(targetFloor > currentFloor) {
-            lift.setPreviousState(Lift.STATE.Up);
             return Lift.STATE.Up;
         }
         if(targetFloor < currentFloor) {
-            lift.setPreviousState(Lift.STATE.Down);
             return Lift.STATE.Down;
         }
         
-        return Lift.STATE.Down;
+        return Lift.STATE.Stop;
     }
-    
+
     @Override
     public int getNextFloor(Lift lift, Lift.STATE state, Building building) {
         ArrayList<Person> people = new ArrayList<Person>(lift.getPeople());
@@ -73,16 +75,18 @@ public class ImprovedBrain2 extends LiftBrain{
         int indexOfFloor = Arrays.binarySearch(floors, currentFloor);        
         
         int floorIndex = -2;
-
+        
+        if(state == Lift.STATE.Stop) state = lift.getPreviousState();
+        
         if((state == Lift.STATE.Up && indexOfFloor == floors.length - 1) || 
                 (state == Lift.STATE.Down && indexOfFloor > 0)) {
-            floorIndex = indexOfFloor - 1;
-            while (floors[floorIndex] == currentFloor && floorIndex > 0) {
+            floorIndex = indexOfFloor;
+            while (floorIndex > 0 && floors[floorIndex] == currentFloor) {
                 floorIndex--;
             }
         }else {
-            floorIndex = indexOfFloor + 1;
-            while (floors[floorIndex] == currentFloor && floorIndex < floors.length - 1 ) {
+            floorIndex = indexOfFloor;
+            while (floorIndex < floors.length - 1 && floors[floorIndex] == currentFloor) {
                 floorIndex++;
             }
         }

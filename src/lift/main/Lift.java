@@ -32,13 +32,9 @@ public class Lift extends Object{
     public static enum STATE {
         Stop, Up, Down
     };
-    
-    private ReentrantLock lock = new ReentrantLock();
-    
+        
     public final int CAPACITY = 5;
     
-    @SuppressWarnings("unused")
-    private ID id;
     private LiftBrain liftBrain;
     private Building building;
     private Test test;
@@ -86,7 +82,8 @@ public class Lift extends Object{
             g.drawRect(x, building.floorHeight * i, width, building.floorHeight);
         }
         
-        if(state == STATE.Stop) g.setColor(Color.blue);
+        if(people.size() == 0) g.setColor(Color.GREEN);
+        else if(state == STATE.Stop) g.setColor(Color.blue);
         else g.setColor(Color.orange);
         
         int currentY = (floors - currentFloor - 1) * building.floorHeight;
@@ -111,7 +108,10 @@ public class Lift extends Object{
         currentFloor++;
         
         test.addStep();
-        state = liftBrain.getNextMove(this, building);        
+        STATE tempState = liftBrain.getNextMove(this, building);
+        if(tempState != STATE.Stop) this.targetFloor = liftBrain.getNextFloor(this, tempState, building);
+        this.previousState = state;
+        this.state = tempState;
     }
     
     /**
@@ -120,7 +120,10 @@ public class Lift extends Object{
     private void down() {
         currentFloor--;
         test.addStep();
-        state = liftBrain.getNextMove(this, building);
+        STATE tempState = liftBrain.getNextMove(this, building);
+        if(tempState != STATE.Stop) this.targetFloor = liftBrain.getNextFloor(this, tempState, building);
+        this.previousState = state;
+        this.state = tempState;
     }
     
     /**
@@ -129,10 +132,12 @@ public class Lift extends Object{
      */
     private void stop() {
         if ((people.size() > 0) || building.getWaitingPeople().size() > 0) {
+            building.getFloors().get(currentFloor).visit();
             getOff();
             board();
             STATE tempState = liftBrain.getNextMove(this, building);
             this.targetFloor = liftBrain.getNextFloor(this, tempState, building);
+            this.previousState = state;
             this.state = tempState;
         } 
     }

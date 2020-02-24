@@ -80,6 +80,14 @@ public class Building{
         liftsArray.add(lift);
     }
     
+    public int[] getWaits() {
+        int[] maxes = new int[floorsArray.size()];
+        for(int i=0; i<floorsArray.size(); i++) {
+            maxes[i] = floorsArray.get(i).getLastVisited();
+        }
+        return maxes;
+    }
+    
     /**
      * Return all people that is waiting.
      * 

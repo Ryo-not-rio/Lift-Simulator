@@ -13,6 +13,8 @@ public class Test {
     private int maxLiftNum;
     private int testNum;
     private int peopleCount;
+    private int maxRate;
+    private int peopleRate;
     
     private Building building;
     private LiftBrain liftBrain;    
@@ -29,17 +31,20 @@ public class Test {
     
     private void initialise() {
         /* Adjust floorsNum and peopleNum to change the range of parameters*/
-        this.liftBrain = new ImprovedBrain2();
+        this.liftBrain = new BrainWithWeights();
         
         if(mainLoop.testing) {
             this.floorsNum = maxFloors > 0 ? r.nextInt(maxFloors / 2) * 2 + 5 : floorsNum;
-            this.peopleNum = maxPeople > 0 ? r.nextInt((maxPeople / 5) - 5) * 5 + 5 : peopleNum;
+            this.peopleRate = maxRate > 0 ? (r.nextInt((maxRate -1) /2) + 1) * 2 : peopleRate;
             this.liftNum = maxLiftNum > 0 ? r.nextInt(maxLiftNum - 1) + 1 : liftNum;
-            this.testNum = (int) (Math.max(maxFloors, floorsNum)/2 * Math.max(maxPeople, peopleNum)/5);
+            
+            this.peopleNum = floorsNum * 25;
+            this.maxPeople = maxFloors * 25;
+            this.testNum = (int) (Math.max(maxFloors, floorsNum)/5 * Math.max(maxPeople, peopleNum)/5);
         } else {
             this.testNum = 1;
+            this.peopleNum = floorsNum * 25;
         }
-        
         this.building = new Building(this.floorsNum, this);
         
         this.steps = 0;
@@ -141,13 +146,17 @@ public class Test {
         return liftNum;
     }
     
+    public int getPeopleRate() {
+        return peopleRate;
+    }
+    
     public void setFloorNum(int number) {
         this.floorsNum = number;
         initialise();
     }
     
-    public void setPeopleNum(int number) {
-        this.peopleNum = number;
+    public void setRateNum(int number) {
+        this.peopleRate = number;
         initialise();
     }
     
@@ -161,8 +170,8 @@ public class Test {
         initialise();
     }
     
-    public void setMaxPeopleNum(int number) {
-        this.maxPeople = number;
+    public void setMaxRateNum(int number) {
+        this.maxRate = number;
         initialise();
     }
     
