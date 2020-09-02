@@ -1,5 +1,6 @@
 # Lift-Simulator
- 
+This program simulates two different types of lift control systems, and enables the user to obtain statististics on each algorithm.
+
 ## Program Structure
 The User interface
 For this project, I started by not having a user interface. However, I realised testing the system and the presentation of the project would improve significantly with a user interface. There are two menus. The main menu where you can run a single simulation with a specified number of floors, rate of people and the algorithm of choice: the baseline or the improved algorithm. The Test menu is the same as the main menu except you can choose to set each parameter to a random value within a range, and the program will do multiple simulations.
